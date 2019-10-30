@@ -1,44 +1,58 @@
+//servidor http
 let express = require("express")
 let app = express()
 const http = require('http').createServer(app)
+//servidor socket
 const io = require('socket.io').listen(http)
-
-var path = require('path')
-
+//meu ip
+let ip = require('ip')
+    ip = ip.address()
+let porta = 8080
+//jogadores
+let jogadores = require('./jogadores')
+	jogadores = new jogadores()
+//login
+let login = require('./login')
+	login = new login(jogadores)
+//criasala teste
+/*
+let sala  = require('./sala')
+let	salaUm = new sala('sala1', 0, [{nickName : 'teste'}])
+let salaDois = new sala('sala2', 0, [{nickName: 'seila'}])
+*/
+//redirecionamento index.html
 app.get('/', (req, resp, next) =>{
 	resp.redirect('/public/index.html')
 	next()
 })
-
+//servidor de arquivos estaticos http
 app.use('/public',express.static('public'))
+app.use('/scripts', express.static(`${__dirname}/node_modules/`));
 
-let jogadores = []
-
+//conecao socket de clientes
 io.on('connection', client =>{
-	let jogador = {
-		NickName: null,
-		clientId: null
-	}
-	let cont = 0
-	setInterval(() => client.emit('seila', cont++), 500)
-	client.on('join', name =>{
-		jogador.NickName = name
-		jogador.clientId = client.id
+	//cliente envia o nickname e recebe o JWT
+	client.on('login', nickName =>{
+		login.login(nickName, client)
+	})
+	client.on('existeJogador', nickName =>{
+		login.nickNameVerify(nickName, client)
+	})
 
-		jogadores.push(jogador)
-		console.log(`[SOCKET] Cliente Connectado: ${client.id}`)
+	client.on('pedidoXum', nickNameAdver =>{
+		console.log(nickNameAdver)
+	})
+
+	client.on('online', token =>{
+		login.online(token, client)
 	})
 	client.on('disconnect', () =>{
-		if(jogadores.indexOf(jogador) >= -1){
-			jogadores.splice(jogadores.indexOf(jogador), 1)
-		}
-		console.log(`[SOCKET] Cliente Desconnectado: ${client.id}`)
+		jogadores.delJogadorSocket(client.id)
 	})
 	client.on('error', error => console.error(error) )
 })
 
-setInterval(() => console.log(jogadores), 2000)
-
-http.listen(8080, () =>{
-	console.log("Ok")
+//servico http escutando na porta :8080
+http.listen(porta, () =>{
+	console.log(`[http] escutando: ${ip}:${porta}`)
 })

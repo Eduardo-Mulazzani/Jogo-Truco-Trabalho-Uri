@@ -1,14 +1,5 @@
-module.exports = {
-	jogadores = [],
-	init: function(){
+module.exports = class partida{
+	constructor(nomeSala){
 
-	},
-	setJogador: function( clientId ){
-		if(this.jogadores.indexOf(clientId) <= -1){
-			this.jogadores.push(clientId)
-		}
-	},
-	getJogadores: function(){
-		return this.jogadores
 	}
 }

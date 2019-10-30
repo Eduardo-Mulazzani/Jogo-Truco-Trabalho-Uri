@@ -1,19 +1,36 @@
 module.exports = {
-	init: function( socket ){
-	jogadores.push({'cliente': client.id})
-	console.log(jogadores)
-	console.log(`Cliente Connectado: ${client.id}`)
-	//setInterval(() => client.emit('seila', "Comunicação Bidirecional"), 1000)
-	client.on('join', name =>{
-		console.log(`name: ${name}, clientId: ${client.id}`)
-	})
-	client.on('send', msg =>{
-		console.log(msg)
-	})
-	client.on('disconnect', () =>{
-		jogadores.indexOf({'cliente': client.id})
-		console.log(`[SOCKET] Cliente Desconnectado: ${client.id}`)
-	})
-	client.on('error', error => console.error(error) )
+	client: null,
+	jogador: {
+		NickName: null,
+		clientId: null
+	},
+	init: function( client ){
+		this.client = client
+	},
+	eventos: function(){
+		//let cont = 0
+		//setInterval(() => client.emit('seila', cont++), 500)
+		this.client.on('join', name =>{
+			this.jogadorConnectado( name )
+		})
+		this.client.on('disconnect', () =>{
+			if(this.jogador.indexOf(jogador) >= -1){
+				this.jogador.splice(this.jogador.indexOf(jogador), 1)
+			}
+			console.log(`[SOCKET] Cliente Desconnectado: ${this.client.id}`)
+		})
+		client.on('error', error => console.error(error) )
+	},
+	jogadorConnectado: function( name ){
+			let jogador = {
+				NickName: null,
+				clientId: null
+			}
+
+			jogador.NickName = name
+			jogador.clientId = this.client.id
+
+			this.jogador.push(jogador)
+			console.log(`[SOCKET] Cliente Connectado: ${this.client.id}`)
 	}
 }

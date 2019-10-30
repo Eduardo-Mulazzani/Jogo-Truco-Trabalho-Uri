@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "ip": "^1.1.5",
+    "jsonwebtoken": "^8.5.1",
     "socket.io-client": "^2.3.0",
     "socketio": "^1.0.0"
   }

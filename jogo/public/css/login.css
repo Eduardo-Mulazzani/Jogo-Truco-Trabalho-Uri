@@ -1,0 +1,57 @@
+body{
+	margin: 0;
+	padding: 0;
+
+	height: 100vh;
+	width: 100%;
+
+	background-image: url("/public/img/fundo.webp");
+	background-repeat: no-repeat;
+	background-size: contain;
+
+font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+input{
+	width: 40%;
+	height: 80%;
+	margin: 1%;
+
+	border: 1px solid grey;
+	border-radius: 4px;
+	outline: none;
+}
+button{
+	width: 50%;
+	height: 5%;
+	outline: none;
+	border: 1px solid grey;
+	border-radius: 4px;
+}
+
+#container{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+#login{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+
+	width: 50%;
+	height: 100vh;
+	background-color: white;
+	border-left: 1px solid grey;
+}
+
+#nickName{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+	margin: 5%;
+}
