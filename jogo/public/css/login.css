@@ -5,7 +5,7 @@ body{
 	height: 100vh;
 	width: 100%;
 
-	background-image: url("public/img/login.jpg");
+	background-image: url("../img/login.jpg");
 	background-repeat: no-repeat;
 	background-size: contain;
 
@@ -17,6 +17,8 @@ input{
 	height: 80%;
 	margin: 1%;
 
+	padding:0.5%;
+	padding-left: 1%;
 	border: 1px solid grey;
 	border-radius: 4px;
 	outline: none;
@@ -41,6 +43,10 @@ button{
 	flex-direction: column;
 	align-items: center;
 
+	color: white;
+	background-image: url(../img/fundo2.jpg);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;		
 	width: 50%;
 	height: 100vh;
 	background-color: white;
@@ -49,9 +55,9 @@ button{
 
 #nickName{
 	display: flex;
+	font-size: 1.5vw;
 	align-items: center;
 	justify-content: center;
-
 	width: 100%;
 	margin: 5%;
 }
