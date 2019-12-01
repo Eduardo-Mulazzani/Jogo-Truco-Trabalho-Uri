@@ -31,6 +31,11 @@ button{
 	border-radius: 4px;
 }
 
+p{
+	font-size: large;
+	font-style: italic;
+}
+
 button:hover{
 	zoom: 150%;
 	border: 1px solid green;
