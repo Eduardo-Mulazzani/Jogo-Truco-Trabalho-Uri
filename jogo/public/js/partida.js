@@ -1,20 +1,13 @@
-class partida{
+class partida {
 	var pedidoTruco = "";
 	var pedidoEnvido = "";
 	var pedidoFlor = "";
 	constructor(){
 		this.socket = io.connect('http://localhost');
 		this.timeout = document.getElementById("timeout");
-		this.pedido = document.getElementById("pedido").value; //do Select
+		
 		this.botaoEnviar = document.getElementById("enviar"); 
-		if(pedido == "truco"){
-			this.pedidoTruco = pedido;
-		}else if(pedido == "envido"){
-			this.pedidoEnvido = pedido;
-		}
-		else if(pedido = "flor"){
-			this.pedidoFlor = pedido;
-		}
+		
 		
 		this.eventos();
 	}
@@ -42,6 +35,15 @@ class partida{
 	}
 	realizarPedido(){ //fazer tratamento para pedido
 		this.botaoEnviar.addEventListener('click', () =>{
+			this.pedido = document.getElementById("pedido").value; //do Select
+			if(pedido == "truco"){
+				this.pedidoTruco = pedido;
+			}else if(pedido == "envido"){
+				this.pedidoEnvido = pedido;
+			}
+			else if(pedido = "flor"){
+				this.pedidoFlor = pedido;
+			}
 			if(pedidoTruco != "" && pedidoTruco == "truco"){
 				this.socket.emit('truco', "truco");	
 			}else if(pedidoEnvido != "" && pedidoEnvido == "envido"){
