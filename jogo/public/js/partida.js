@@ -3,6 +3,15 @@ class partida{
 	constructor(){
 		this.socket = io.connect('http://localhost');
 		this.timout = document.getElementById("timout");
+		this.pedido = document.getElementById("pedido").value; //do Select
+		if(pedido == "truco"){
+			this.pedidoTruco = pedido;
+		}else if(pedido == "envido"){
+			this.pedidoEnvido = pedido;
+		}
+		else if(pedido = "flor"){
+			this.pedidoFlor = pedido;
+		}
 		this.botaotruco = document.getElementById("botaoTruco");
 		this.botaoenvido = document.getElementById("botaoEnvido");
 		this.botaoflor = document.getElementById("botaoFlor");
@@ -26,24 +35,29 @@ class partida{
 			rota: 'index'
 		})
 	}
-	Receivetime(){
+	receivetime(){
 		this.socket.on('timout', timout => {
 			this.timeout.innerHTML = timeout;
 		});
 	}
-	PedirTruco(){ //fazer tratamento para pedido
+	pedirTruco(){ //fazer tratamento para pedido
 		this.botaotruco.addEventListener('click', () =>{
 			this.socket.emit('truco', "truco");		
 		})
 	}
-	PedirEnvido(){ //fazer tratamento para pedido
+	pedirEnvido(){ //fazer tratamento para pedido
 		this.botaoenvido.addEventListener('click', () =>{
 			this.socket.emit('envido', "envido");		
 		})
 	}
-	PedirFlor(){ //fazer tratamento para pedido
+	pedirFlor(){ //fazer tratamento para pedido
 		this.botaoflor.addEventListener('click', () =>{
 			this.socket.emit('flor', "flor");		
+		})
+	}
+	embaralhar(){
+		this.socket.emit('embaralhar', () =>{
+			console.log("Embaralhando...");
 		})
 	}
 
