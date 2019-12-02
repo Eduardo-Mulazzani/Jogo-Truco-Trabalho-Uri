@@ -1,58 +1,55 @@
-const index = {
-	socket: null,
-	xUm: null,
-	lobby: null,
-	init: function(){
-		this.socket = io.connect('http://localhost:8080')
-		this.xUm = document.getElementById('xUm')
-		this.lobby = document.getElementById('lobby')
-		this.nickName = document.getElementById('nickName')
-
-		this.sendToken()
-
+class login{
+	constructor(){
+		this.socket = io.connect('http://localhost')
+		this.nickName = document.getElementById('nick')
+		this.button = document.getElementById('jogar')
+		this.verify = document.getElementById('verifica-jogador')
+	
 		this.eventos()
-	},
-	eventos: function(){
-
+	}
+	eventos(){
+		this.sendToken()
 		this.socket.on('token', token =>{
-			console.log(token)
-			sessionStorage.setItem('trucoGauderio', token)
-		})
-
-		this.socket.on('nickName', nickName =>{
-			this.nickName.innerHTML = nickName
-		})
-
-		setInterval(() =>{
-			this.sendToken()
-		}, 5000)
-
-		this.socket.on('connected', con =>{
-			if(!con){
-				window.location.href = "/public/login.html"
+			if(!token){
+				this.verify.innerHTML = "Usuário não disponível!"
+			}else{
+				sessionStorage.setItem('trucoGauderio', token)
+				window.location.href = "/public/escolhas.html"
 			}
 		})
 
-		this.xUm.addEventListener('click', () =>{
-			window.location.href = "/public/xUm.html"
+		this.socket.on('inexisteJogador', existe =>{
+			if(existe){
+				this.verify.innerHTML = "Usuário não disponível!"
+			}else{
+				this.verify.innerHTML = "Usuário Disponível!"
+			}
+			console.log(existe)
 		})
-		this.lobby.addEventListener('click', () =>{
-			window.location.href = "/public/lobby.html"
+
+		this.nickName.addEventListener("keyup", (event) =>{
+  			if (event.keyCode === 13) {
+  				this.logar()
+  			}else{
+  				if(this.nickName.value != ''){
+  					this.socket.emit('existeJogador', this.nickName.value)
+  				}
+  			}
 		})
-	},
-	sendToken: function(){
+		this.button.addEventListener('click', () =>{
+			logar()
+		})
+	}
+	sendToken(){
 		this.socket.emit('online', {
-			token: sessionStorage.getItem('trucoGauderio'),
-			rota: 'index'
+			token: sessionStorage.getItem('trucoGauderio')
 		})
-	},
-	message: function( msg ){
-		switch(msg.route){
-			case 'nickName':
-				console.log(msg.nickName)
-				break 
+	}
+	logar(){
+		if(this.nickName.value != ''){
+			this.socket.emit('login', this.nickName.value)
 		}
 	}
 }
 
-index.init()
+login = new login()

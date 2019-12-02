@@ -1,69 +1,56 @@
 module.exports = class Login{
 	//inicializa objetos e variaveis
 	constructor(jogadores){
-		this.token = {
-			jwt: null,
-			secretKey: null
-		}
-		this.jogadores = jogadores
+		this.token = require('./tokenSystem')
+		this.token = new this.token()
 
-		this.token.jwt = require('jsonwebtoken')
-		this.token.secretKey = "retruco"
+		this.jogadores = jogadores
 	}
 	//realiza login pelo nickName
 	login(nickName, socket){
-		if(this.jogadores.existeJogador(nickName)){
+		if(this.jogadores.existeJogador(nickName, false)){
 			return socket.emit('inexisteJogador', true)
 		}
-		return socket.emit('token', this.tokenCreate(nickName))
+		this.jogadores.setJogador(nickName, socket.id)
+		this.timeoutJogador(nickName)
+		return socket.emit('token', this.token.tokenCreate(nickName))
 	}
-	//verifica se usuario ja fez o login
-	online(token, socket){
+	jogadorOnline(client, token){
 		if(token.hasOwnProperty('token')){
-			if(token.hasOwnProperty('rota')){
-				this.tokenVerify(token.token, decoded =>{
-					if(!decoded){
-						socket.emit('connected', false)
-					}else{
-						this.jogadores.setJogador(decoded.nickName, socket.id)
-						socket.emit('token', this.tokenCreate(decoded.nickName))
-						socket.emit('nickName', decoded.nickName)
-						socket.emit('connected', true)
+			this.token.tokenVerify(token.token, decoded =>{
+				if(!decoded){
+					client.emit('connected', false)
+				}else{
+					//reiniciarTimeout jogador
+					this.timeoutJogador(decoded.nickName)
 
-						this.rotas(decoded.nickName, token.rota, socket)
+					if(!this.jogadores.existeJogador(decoded.nickName)){
+						this.jogadores.setJogador(decoded.nickName, client.id)
 					}
-				})
-			}else{
-				socket.emit('connected', false)
-			}
-		}else{
-			socket.emit('connected', false)
-		}
+
+					//socket alterado precisa ser trocado
+					this.jogadores.alterSocketJogador(decoded.nickName, client.id)
+					//cria novo token e devolve ao jogador
+					client.emit('token', this.token.tokenCreate(decoded.nickName))
+					client.emit('nickName', decoded.nickName)
+					client.emit('connected', true)
+				}
+			})
+		}else{ client.emit('connected', false) }	
 	}
-	rotas(nickName, rota, socket){
-		switch (rota) {
-			case 'xUm':
-				socket.emit('jogadores', this.jogadores.getOutrosJogadores(nickName))
-				break;
-		}
+	timeoutJogador(nickName){
+		console.log(nickName)
+		clearTimeout(this.timeOut)
+		this.timeOut = setTimeout(() =>{
+			this.jogadores.delJogadorNickname(nickName)
+			console.log(`Jogador ${nickName} deletado`)
+		}, 15000)
 	}
 	//verifica se nickname nao existe
 	nickNameVerify(nickName, socket){
-		if(this.jogadores.existeJogador(nickName)){
+		if(this.jogadores.existeJogador(nickName, false)){
 			return socket.emit('inexisteJogador', true)
 		}
 		return socket.emit('inexisteJogador', false)
-	}
-	//cria jsonwebtoken
-	tokenCreate(nickName){
-		return this.token.jwt.sign({nickName: nickName}, this.token.secretKey, { 
-			expiresIn: '15000'
-		})
-	}
-	//verifica jsonwebtoken
-	tokenVerify(token, callback){
-    	this.token.jwt.verify(token, this.token.secretKey, (err, decoded) =>{
-        	!err ? callback(decoded) : callback(false)
-    	})
 	}
 }

@@ -1,22 +1,17 @@
-class partida{
+
+class partida {
 	var pedidoTruco = "";
 	var pedidoEnvido = "";
 	var pedidoFlor = "";
 	constructor(){
 		this.socket = io.connect('http://localhost');
 		this.timeout = document.getElementById("timeout");
-		this.pedido = document.getElementById("pedido").value; //do Select
+		this.labelEmbaralha = document.getElementById("labelEmbaralhar");
 		this.botaoEnviar = document.getElementById("enviar"); 
-		if(pedido == "truco"){
-			this.pedidoTruco = pedido;
-		}else if(pedido == "envido"){
-			this.pedidoEnvido = pedido;
-		}
-		else if(pedido = "flor"){
-			this.pedidoFlor = pedido;
-		}
+		
 		
 		this.eventos();
+
 	}
 	eventos(){
 		setInterval(() =>{
@@ -26,8 +21,11 @@ class partida{
 			console.log(token)
 			sessionStorage.setItem('trucoGauderio', token)
 		})
+
 		this.receivetime();
 		this.realizarPedido();
+
+
 	}
 	sendToken(){
 		this.socket.emit('online', {
@@ -35,6 +33,7 @@ class partida{
 			rota: 'index'
 		})
 	}
+
 	receivetime(){
 		this.socket.on('timeout', timeout => {
 			this.timeout.innerHTML = timeout;
@@ -42,6 +41,15 @@ class partida{
 	}
 	realizarPedido(){ //fazer tratamento para pedido
 		this.botaoEnviar.addEventListener('click', () =>{
+			this.pedido = document.getElementById("pedido").value; //do Select
+			if(pedido == "truco"){
+				this.pedidoTruco = pedido;
+			}else if(pedido == "envido"){
+				this.pedidoEnvido = pedido;
+			}
+			else if(pedido = "flor"){
+				this.pedidoFlor = pedido;
+			}
 			if(pedidoTruco != "" && pedidoTruco == "truco"){
 				this.socket.emit('truco', "truco");	
 			}else if(pedidoEnvido != "" && pedidoEnvido == "envido"){
@@ -55,9 +63,16 @@ class partida{
 		})
 	}
 	embaralhar(){
-		this.socket.emit('embaralhar', () =>{
+		this.socket.emit('embaralhar', confirma =>{
 			console.log("Embaralhando...");
+			if(confirma){
+				labelEmbaralha.innerHTML = "Pronto";
+				console.log("Pronto");
+			}
 		})
+	}
+	recebeCartas(){
+			
 	}
 
 }
