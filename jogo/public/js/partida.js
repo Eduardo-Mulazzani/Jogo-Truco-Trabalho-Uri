@@ -1,4 +1,3 @@
-
 class partida {
 	var pedidoTruco = "";
 	var pedidoEnvido = "";
@@ -6,7 +5,9 @@ class partida {
 	constructor(){
 		this.socket = io.connect('http://localhost');
 		this.timeout = document.getElementById("timeout");
+
 		this.labelEmbaralha = document.getElementById("labelEmbaralhar");
+		
 		this.botaoEnviar = document.getElementById("enviar"); 
 		
 		
