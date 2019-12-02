@@ -2,6 +2,7 @@ class partida {
 	var pedidoTruco = "";
 	var pedidoEnvido = "";
 	var pedidoFlor = "";
+	var cartas = [];
 	constructor(){
 		this.socket = io.connect('http://localhost');
 		this.timeout = document.getElementById("timeout");
@@ -25,8 +26,6 @@ class partida {
 
 		this.receivetime();
 		this.realizarPedido();
-
-
 	}
 	sendToken(){
 		this.socket.emit('online', {
@@ -34,7 +33,6 @@ class partida {
 			rota: 'index'
 		})
 	}
-
 	receivetime(){
 		this.socket.on('timeout', timeout => {
 			this.timeout.innerHTML = timeout;
@@ -44,24 +42,29 @@ class partida {
 		this.botaoEnviar.addEventListener('click', () =>{
 			this.pedido = document.getElementById("pedido").value; //do Select
 			if(pedido == "truco"){
-				this.pedidoTruco = pedido;
+				this.socket.emit('truco', "truco");	
 			}else if(pedido == "envido"){
-				this.pedidoEnvido = pedido;
+				this.socket.emit('envido',"envido");
 			}
 			else if(pedido = "flor"){
-				this.pedidoFlor = pedido;
-			}
-			if(pedidoTruco != "" && pedidoTruco == "truco"){
-				this.socket.emit('truco', "truco");	
-			}else if(pedidoEnvido != "" && pedidoEnvido == "envido"){
-				this.socket.emit('envido',"envido");
-			}else if(pedidoFlor != "" && pedidoFlor ==  "flor"){
 				this.socket.emit('flor',"flor");
 			}else{
 				console.log("Erro! Evento não registrado.");
 			}
 					
 		})
+	}
+	recebePedido(){
+		this.socket.on('truco', () =>{
+			window.alert("Truco.");
+		})
+		this.socket.on('envido' () =>{
+			window.alert("envido");
+		})
+		this.socket.on('flor' () =>{
+			window.alert("flor");
+		})
+
 	}
 	embaralhar(){
 		this.socket.emit('embaralhar', confirma =>{
@@ -72,9 +75,14 @@ class partida {
 			}
 		})
 	}
-	recebeCartas(){
-			
+	recebeCartasEmbaralhadas(){
+		this.socket.on('embaralhado', cartas =>{
+			this.cartas = cartas;
+		})
 	}
+	/*enviarCarta(){
+
+	}*/
 
 }
 part = new partida()
