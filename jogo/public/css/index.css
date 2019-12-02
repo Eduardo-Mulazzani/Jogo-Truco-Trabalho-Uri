@@ -1,57 +1,77 @@
 body{
-	border: 0;
 	margin: 0;
-	font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
-}
+	padding: 0;
 
-nav{
-	display: flex;
-	justify-content: space-between;
-	align-content: center;
-	align-items: center;
-
+	height: 100vh;
 	width: 100%;
-	height: 8%;
-	background-color: grey;
+
+	background-image: url("../img/login12.jpg");
+	background-repeat: no-repeat;
+	background-size: contain;
+
+font-family: Arial, Helvetica, sans-serif;
 }
 
-h3{
-	font-weight: 100;
-	padding: 2%;
-	color: white;
-}
+input{
+	width: 40%;
+	height: 80%;
+	margin: 1%;
 
-button{
-	width: 90%;
-	height: 10%;
-	cursor: pointer;
+	padding:0.5%;
+	padding-left: 1%;
+	border: 1px solid grey;
+	border-radius: 4px;
 	outline: none;
-	border: 3px solid grey;
-	border-radius: 5px;
-	background-color: white;
-	font-size: 120%;
-	margin: 5%;
+}
+button{
+	width: 50%;
+	height: 5%;
+	outline: none;
+	border: 1px solid grey;
+	border-radius: 4px;
+}
+
+p{
+	font-size: large;
+	font-style: italic;
+}
+
+button:hover{
+	zoom: 150%;
+	border: 1px solid green;
+	border-radius: 4px;
+	font-style: green;
+	background-color: lightgreen;
+
 }
 
 #container{
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	height: 100vh;
-	width: 100%;
+	align-items: flex-end;
 }
 
-#escolhas{
+#login{
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 
-	height: 100%;
+	color: white;
+	background-image: url(../img/fundo2.jpg);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;		
 	width: 50%;
-	border-left: 3px solid grey;
-	border-right: 3px solid grey;
+	height: 100vh;
 	background-color: white;
+	border-left: 1px solid grey;
+}
+
+#nickName{
+	display: flex;
+	font-size: 1.5vw;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin: 5%;
 }

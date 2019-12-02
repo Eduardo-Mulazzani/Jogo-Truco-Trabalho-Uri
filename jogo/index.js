@@ -7,19 +7,17 @@ const io = require('socket.io').listen(http)
 //meu ip
 let ip = require('ip')
     ip = ip.address()
-let porta = 8080
+let porta = 80
 //jogadores
 let jogadores = require('./jogadores')
 	jogadores = new jogadores()
 //login
 let login = require('./login')
 	login = new login(jogadores)
-//criasala teste
-/*
-let sala  = require('./sala')
-let	salaUm = new sala('sala1', 0, [{nickName : 'teste'}])
-let salaDois = new sala('sala2', 0, [{nickName: 'seila'}])
-*/
+//duplas jogando online
+let duplas = require('./duplas')
+	duplas = new duplas()
+
 //redirecionamento index.html
 app.get('/', (req, resp, next) =>{
 	resp.redirect('/public/index.html')
@@ -38,21 +36,44 @@ io.on('connection', client =>{
 	client.on('existeJogador', nickName =>{
 		login.nickNameVerify(nickName, client)
 	})
-
-	client.on('pedidoXum', nickNameAdver =>{
-		console.log(nickNameAdver)
+	client.on('pedidoDuplas', nickNameAdver =>{
+		pedidoDuplas(client, nickNameAdver)
 	})
-
+  //MUITO IMPORTANTE
+  //verifica o token e renova a sessao
 	client.on('online', token =>{
-		login.online(token, client)
+		login.jogadorOnline(client, token)
 	})
-	client.on('disconnect', () =>{
-		jogadores.delJogadorSocket(client.id)
-	})
+  //
+  //jogador desconectado do socket
+	client.on('disconnect', () =>{ })
 	client.on('error', error => console.error(error) )
 })
 
-//servico http escutando na porta :8080
+setInterval(() => {
+   	io.emit('broadcast', {
+      	action: 'jogadores',
+      	jogadores: jogadores.jogadores
+    })
+ }, 1500)
+
+function pedidoDuplas(client, nickNameAdver){
+	if(!jogadores.existeJogador(false, client.id)) return
+	if(!jogadores.existeJogador(nickNameAdver.nickName, false)) return
+
+	duplas.setDupla(
+		[{ 
+			jogador: jogadores.getJogadorSocketId(client.id)
+		},
+		{
+			jogador: jogadores.getJogadorNickname(nickNameAdver.nickName)
+		}]
+	, () =>{
+		console.log(jogadores)
+	})
+	//console.log(duplas.duplas[0][0].jogador)
+}
+//servico http escutando na porta :80
 http.listen(porta, () =>{
 	console.log(`[http] escutando: ${ip}:${porta}`)
 })
