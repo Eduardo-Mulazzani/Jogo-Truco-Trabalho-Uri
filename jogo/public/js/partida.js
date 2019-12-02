@@ -1,9 +1,12 @@
 class partida{
-
+	var pedidoTruco = "";
+	var pedidoEnvido = "";
+	var pedidoFlor = "";
 	constructor(){
 		this.socket = io.connect('http://localhost');
-		this.timout = document.getElementById("timout");
+		this.timeout = document.getElementById("timeout");
 		this.pedido = document.getElementById("pedido").value; //do Select
+		this.botaoEnviar = document.getElementById("enviar"); 
 		if(pedido == "truco"){
 			this.pedidoTruco = pedido;
 		}else if(pedido == "envido"){
@@ -12,9 +15,7 @@ class partida{
 		else if(pedido = "flor"){
 			this.pedidoFlor = pedido;
 		}
-		this.botaotruco = document.getElementById("botaoTruco");
-		this.botaoenvido = document.getElementById("botaoEnvido");
-		this.botaoflor = document.getElementById("botaoFlor");
+		
 		this.eventos();
 	}
 	eventos(){
@@ -25,9 +26,8 @@ class partida{
 			console.log(token)
 			sessionStorage.setItem('trucoGauderio', token)
 		})
-		this.PedirTruco();
-		this.PedirEnvido();
-		this.PedirFlor();
+		this.receivetime();
+		this.realizarPedido();
 	}
 	sendToken(){
 		this.socket.emit('online', {
@@ -36,23 +36,22 @@ class partida{
 		})
 	}
 	receivetime(){
-		this.socket.on('timout', timout => {
+		this.socket.on('timeout', timeout => {
 			this.timeout.innerHTML = timeout;
 		});
 	}
-	pedirTruco(){ //fazer tratamento para pedido
-		this.botaotruco.addEventListener('click', () =>{
-			this.socket.emit('truco', "truco");		
-		})
-	}
-	pedirEnvido(){ //fazer tratamento para pedido
-		this.botaoenvido.addEventListener('click', () =>{
-			this.socket.emit('envido', "envido");		
-		})
-	}
-	pedirFlor(){ //fazer tratamento para pedido
-		this.botaoflor.addEventListener('click', () =>{
-			this.socket.emit('flor', "flor");		
+	realizarPedido(){ //fazer tratamento para pedido
+		this.botaoEnviar.addEventListener('click', () =>{
+			if(pedidoTruco != "" && pedidoTruco == "truco"){
+				this.socket.emit('truco', "truco");	
+			}else if(pedidoEnvido != "" && pedidoEnvido == "envido"){
+				this.socket.emit('envido',"envido");
+			}else if(pedidoFlor != "" && pedidoFlor ==  "flor"){
+				this.socket.emit('flor',"flor");
+			}else{
+				console.log("Erro! Evento não registrado.");
+			}
+					
 		})
 	}
 	embaralhar(){
