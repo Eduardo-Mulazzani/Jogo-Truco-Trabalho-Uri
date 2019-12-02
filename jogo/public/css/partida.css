@@ -6,4 +6,16 @@ body{
 	background-image: url("../img/fundopart.jpg");
     background-repeat: no-repeat;
     background-size: cover;
+   
 }
+#container{
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	margin-top: 45%;
+	flex-direction: row;
+}
+#botaoTruco,#botaoEnvido,#botaoFlor{
+		width: 20vw;
+}
+
