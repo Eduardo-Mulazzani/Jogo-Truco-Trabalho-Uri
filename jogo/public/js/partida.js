@@ -40,8 +40,10 @@ class partida {
 			sessionStorage.setItem('trucoGauderio', token)
 		})
 
-		this.receivetime();
-		this.realizarPedido();
+		//this.receivetime();
+		//this.realizarPedido();
+		this.recebeCartasEmbaralhadas();
+		this.embaralhar()
 	}
 	sendToken(){
 		this.socket.emit('online', {
@@ -83,6 +85,7 @@ class partida {
 	}
 	embaralhar(){
 		this.botaoEmbaralhar.addEventListener('click', () =>{
+			console.log("embaralhando")
 			this.socket.emit('embaralhar', "embaralha");
 			this.socket.on('embaralhado', confirma => {
 				if(confirma){ //boolean

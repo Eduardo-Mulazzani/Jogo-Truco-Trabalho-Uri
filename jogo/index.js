@@ -23,6 +23,25 @@ app.get('/', (req, resp, next) =>{
 	resp.redirect('/public/index.html')
 	next()
 })
+var cartas = [
+	'o',
+	'c',
+	'e',
+	'p',
+	[
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+		'7',
+		'10',
+		'11',
+		'12'
+	]
+]
+
 //servidor de arquivos estaticos http
 app.use('/public',express.static('public'))
 app.use('/scripts', express.static(`${__dirname}/node_modules/`));
@@ -44,11 +63,43 @@ io.on('connection', client =>{
 	client.on('online', token =>{
 		login.jogadorOnline(client, token)
 	})
+	client.on('embaralhar',msg =>{
+		recebe(msg)
+	})
   //
   //jogador desconectado do socket
 	client.on('disconnect', () =>{ })
 	client.on('error', error => console.error(error) )
 })
+
+function embaralha(){
+	return `${cartas[Math.floor(Math.random()*4)]}${cartas[4][Math.floor(Math.random()*9)]}`
+}
+
+function recebe(msg){
+	io.emit('recebeCartas', {
+		    jogaUm: {
+				cartas: {
+					cartaUm: embaralha(),
+					cartaDois: embaralha(),
+					cartaTres: embaralha()
+				}
+			},
+			jogaDois: {
+				cartas: {
+					cartaUm: embaralha(),
+					cartaDois: embaralha(),
+					cartaTres: embaralha()
+				}
+			}
+	})
+
+
+}
+
+
+
+
 
 setInterval(() => {
    	io.emit('broadcast', {
